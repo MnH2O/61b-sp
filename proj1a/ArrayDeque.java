@@ -71,8 +71,8 @@ public class ArrayDeque<T> {
 
     public void printDeque() {
         for(T item: items) {
-        System.out.print(item + " ");
-    }
+            System.out.print(item + " ");
+        }
     }
 
     public T removeFirst() {
@@ -107,11 +107,15 @@ public class ArrayDeque<T> {
     }
 
     public T get(int index) {
+        int first = nextFirst + 1;
         if ((size == 0) | (index >= items.length)) {
             return null;
         }
-        else
-            return items[index];
+        else if (first + index < items.length){
+            return items[first + index];
+        } else {
+            return items[first + index - items.length];
+        }
     }
 
 //    public static void main(String[] args) {
