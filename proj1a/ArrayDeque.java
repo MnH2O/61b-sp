@@ -81,11 +81,17 @@ public class ArrayDeque<T> {
         else {
             size -= 1;
             T value = items[nextFirst + 1];
-            resizeRemoveFirst();
+            if(items.length > 8) {
+                resizeRemoveFirst();
 
-            if (nextLast > nextFirst)
-                nextLast -= 1;
+                if (nextLast > nextFirst)
+                    nextLast -= 1;
 
+            }
+            else {
+                items[nextFirst + 1] = null;
+                nextFirst += 1;
+            }
             return value;
         }
     }
@@ -96,12 +102,17 @@ public class ArrayDeque<T> {
         else {
             size -= 1;
             T value = items[nextLast - 1];
-            resizeRemoveLast();
+            if(items.length > 8) {
+                resizeRemoveLast();
 
-            nextLast -= 1;
-            if (nextFirst >= nextLast)
-                nextFirst -= 1;
-
+                nextLast -= 1;
+                if (nextFirst >= nextLast)
+                    nextFirst -= 1;
+            }
+            else {
+                items[nextLast - 1] = null;
+                nextLast -= 1;
+            }
             return value;
         }
     }
