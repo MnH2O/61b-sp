@@ -12,53 +12,46 @@ public class ArrayDeque<T> {
         this.nextLast = 5;
     }
 
-    /* we need to call this method (add one spot for the array) when nextFirst == nextLast */
-    private void resizeAdd() {
-        T[] items_new = (T []) new Object[items.length + 1];
-        System.arraycopy(items, 0, items_new, 0, nextFirst);
-        System.arraycopy(items, nextFirst, items_new, nextFirst + 1, items.length - nextFirst);
-        items = items_new;
+    private int plusOne(int value){
+        return (value + 1) % items.length;
     }
 
-    /* Whenever we remove an item, we should decrease the length of the array by 1 */
-    private void resizeRemoveFirst() {
-        T[] items_new = (T []) new Object[items.length - 1];
-        System.arraycopy(items, 0, items_new, 0, nextFirst+1);
-        System.arraycopy(items, nextFirst+2, items_new, nextFirst+1, items.length - nextFirst - 2);
-        items = items_new;
+    private int minusOne(int value){
+        return (value - 1 + items.length) % items.length;
     }
 
-    private void resizeRemoveLast() {
-        T[] items_new = (T []) new Object[items.length - 1];
-        System.arraycopy(items, 0, items_new, 0, nextLast-1);
-        System.arraycopy(items, nextLast, items_new, nextLast-1, items.length - nextLast);
+    private void resize(int newSize){
+        T[] items_new = (T []) new Object[newSize];
+        int oldIndex = plusOne(nextFirst);
+        for(int newIndex = 0; newIndex < size; newIndex += 1)
+        {
+            items_new[newIndex] = items[oldIndex];
+            oldIndex = plusOne(oldIndex);
+        }
         items = items_new;
+        nextFirst = newSize -1;
+        nextLast = size;
     }
+
 
     public void addFirst(T item) {
-        size += 1;
-        if (nextFirst == -1)
-            nextFirst = items.length - 1;
-        if (nextFirst == nextLast) {
-            resizeAdd();
-            nextFirst += 1;
+        if(items.length == size) {
+            resize(size * 2);
         }
 
         items[nextFirst] = item;
-        nextFirst -= 1;
+        nextFirst = minusOne(nextFirst);
+        size += 1;
     }
 
     public void addLast(T item) {
-        size += 1;
-        if (nextLast == items.length)
-            nextLast = 0;
-        if (nextFirst == nextLast) {
-            resizeAdd();
-            nextFirst += 1;
+        if(items.length == size) {
+            resize(size * 2);
         }
 
         items[nextLast] = item;
-        nextLast += 1;
+        nextLast = plusOne(nextLast);
+        size += 1;
     }
 
     public boolean isEmpty() {
@@ -76,45 +69,27 @@ public class ArrayDeque<T> {
     }
 
     public T removeFirst() {
-        if(size == 0)
-            return null;
-        else {
+        if(items.length > 16 && size * 4 < items.length)
+            resize(size/2);
+        nextFirst = plusOne(nextFirst);
+        T value = items[nextFirst];
+        items[nextFirst] = null;
+        if(isEmpty() == false) {
             size -= 1;
-            T value = items[nextFirst + 1];
-            if(items.length > 8) {
-                resizeRemoveFirst();
-
-                if (nextLast > nextFirst)
-                    nextLast -= 1;
-
-            }
-            else {
-                items[nextFirst + 1] = null;
-                nextFirst += 1;
-            }
-            return value;
         }
+        return value;
     }
 
     public T removeLast() {
-        if (size == 0)
-            return null;
-        else {
+        if(items.length > 16 && size * 4 < items.length)
+            resize(size/2);
+        nextLast = minusOne(nextLast);
+        T value = items[nextLast];
+        items[nextLast] = null;
+        if(isEmpty() == false){
             size -= 1;
-            T value = items[nextLast - 1];
-            if(items.length > 8) {
-                resizeRemoveLast();
-
-                nextLast -= 1;
-                if (nextFirst >= nextLast)
-                    nextFirst -= 1;
-            }
-            else {
-                items[nextLast - 1] = null;
-                nextLast -= 1;
-            }
-            return value;
         }
+        return value;
     }
 
     public T get(int index) {
