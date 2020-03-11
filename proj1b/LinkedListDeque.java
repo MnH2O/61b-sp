@@ -1,0 +1,119 @@
+public class LinkedListDeque<T> implements Deque<T>{
+    // implementation of Tnode
+    public class TNode{
+        public TNode prev;
+        public T item;
+        public TNode next;
+
+        public TNode(TNode p, T i, TNode n){
+            prev = p;
+            item = i;
+            next = n;
+        }
+    }
+
+    private int size;
+    private TNode Sentinel;
+
+    public LinkedListDeque(){
+        size = 0;
+        Sentinel = new TNode(null, null, null);
+        Sentinel.next = Sentinel;
+        Sentinel.prev = Sentinel;
+    }
+
+    @Override
+    public void addFirst(T item){
+        size += 1;
+        Sentinel.next = new TNode(Sentinel, item, Sentinel.next);
+        Sentinel.next.next.prev = Sentinel.next;
+    }
+
+    @Override
+    public void addLast(T item){
+        size += 1;
+        Sentinel.prev = new TNode(Sentinel.prev, item, Sentinel);
+        Sentinel.prev.prev.next = Sentinel.prev;
+    }
+
+    @Override
+    public boolean isEmpty(){
+        if(size == 0)
+            return true;
+        return false;
+    }
+
+    @Override
+    public int size(){
+        return size;
+    }
+
+    @Override
+    public void printDeque(){
+        int count = 0;
+        TNode pointer = Sentinel;
+        while(count < size)
+        {
+            pointer = pointer.next;
+            System.out.print(pointer.item + " ");
+            count += 1;
+        }
+    }
+
+    @Override
+    public T removeFirst(){
+        if (size == 0)
+            return null;
+        else {
+            size -= 1;
+            T value = Sentinel.next.item;
+            Sentinel.next.next.prev = Sentinel;
+            Sentinel.next = Sentinel.next.next;
+            return value;
+        }
+    }
+
+    @Override
+    public T removeLast(){
+        if (size == 0)
+            return null;
+        else {
+            size -= 1;
+            T value = Sentinel.prev.item;
+            Sentinel.prev.prev.next = Sentinel;
+            Sentinel.prev = Sentinel.prev.prev;
+            return value;
+        }
+    }
+
+    @Override
+    public T get(int index){
+        if (index > size - 1)
+            return null;
+        else {
+            TNode pointer = Sentinel.next;
+            while(index > 0){
+                pointer = pointer.next;
+                index -= 1;
+            }
+            return pointer.item;
+        }
+    }
+
+    // using a recursive helper function helper(int index, TNode node)
+    public T getRecursive(int index){
+        if (index > size - 1)
+            return null;
+        else {
+            return helper(index, Sentinel.next);
+        }
+    }
+
+    private T helper(int index, TNode node){
+        if(index == 0)
+            return node.item;
+        else
+            return helper(index - 1, node.next);
+    }
+
+}
