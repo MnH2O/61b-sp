@@ -1,9 +1,7 @@
 package synthesizer;
 import java.util.Iterator;
 
-//TODO: Make sure to make this class and all of its methods public
-//TODO: Make sure to make this class extend AbstractBoundedQueue<t>
-public class ArrayRingBuffer<T> extends AbstractBoundedQueue<T>{
+public class ArrayRingBuffer<T> extends AbstractBoundedQueue<T> {
     /* Index for the next dequeue or peek. */
     private int first;
     /* Index for the next enqueue. */
@@ -28,8 +26,8 @@ public class ArrayRingBuffer<T> extends AbstractBoundedQueue<T>{
      * covered Monday.
      */
     public void enqueue(T x) {
-        if(isFull()){
-            throw new RuntimeException("Ring buffer overflow");
+        if (isFull()) {
+            throw new RuntimeException("Ring Buffer Overflow");
         }
         rb[last] = x;
         last = (last + 1) % capacity;
@@ -42,7 +40,7 @@ public class ArrayRingBuffer<T> extends AbstractBoundedQueue<T>{
      * covered Monday.
      */
     public T dequeue() {
-        if(isEmpty()){
+        if(isEmpty()) {
             throw new RuntimeException("Ring buffer underflow");
         }
         T result = rb[first];
@@ -56,27 +54,30 @@ public class ArrayRingBuffer<T> extends AbstractBoundedQueue<T>{
      * Return oldest item, but don't remove it.
      */
     public T peek() {
+        if(isEmpty()) {
+            throw new RuntimeException("Ring buffer underflow");
+        }
         return rb[first];
     }
 
     // TODO: When you get to part 5, implement the needed code to support iteration.
-    public Iterator<T> iterator(){
+    public Iterator<T> iterator() {
         return new ArrayRingBufferIterator();
     }
 
-    private class ArrayRingBufferIterator implements Iterator<T>{
+    private class ArrayRingBufferIterator implements Iterator<T> {
         private int pos;
         private int time;
 
-        public ArrayRingBufferIterator(){
+        public ArrayRingBufferIterator() {
             pos = first;
             time = 0;
         }
-        public boolean hasNext(){
+        public boolean hasNext() {
             return time < fillCount;
         }
 
-        public T next(){
+        public T next() {
             T returnItem = rb[pos];
             time += 1;
             pos = (pos + 1) % capacity;
@@ -85,4 +86,3 @@ public class ArrayRingBuffer<T> extends AbstractBoundedQueue<T>{
     }
 
 }
-
