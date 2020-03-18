@@ -7,10 +7,10 @@ public class PercolationStats {
     private double[] percolationThreshold;
     // perform T independent experiments on an N-by-N grid
     public PercolationStats(int N, int T, PercolationFactory pf) {
-        percolationThreshold = new double[T];
-        if (N <= 0 | T <= 0) {
+        if (N <= 0 || T <= 0) {
             throw new java.lang.IllegalArgumentException("N and T must be greater than 0");
         }
+        percolationThreshold = new double[T];
         for(int i = 0; i < T; i += 1) {
             int count = 0;
             Percolation sample = pf.make(N);
