@@ -1,6 +1,9 @@
 package hw3.hash;
 import java.util.List;
 import java.util.ArrayList;
+
+import edu.princeton.cs.algs4.Complex;
+import edu.princeton.cs.algs4.In;
 import edu.princeton.cs.algs4.StdDraw;
 import java.awt.Color;
 import edu.princeton.cs.algs4.StdRandom;
@@ -80,11 +83,25 @@ public class ComplexOomage implements Oomage {
         return new ComplexOomage(params);
     }
 
+    static ComplexOomage poorDistributionOomage() {
+        int N = 6; // the size is always 10
+        ArrayList<Integer> params = new ArrayList<>(N);
+        params.add(StdRandom.uniform(0, 255));
+        params.add(StdRandom.uniform(0, 255));
+        params.add(2);
+        params.add(3);
+        params.add(4);
+       // only first param in this list is random
+        ComplexOomage x = new ComplexOomage(params);
+        return x;
+    }
+
     public static void main(String[] args) {
         System.out.println("Drawing 4 random complex Oomages.");
         randomComplexOomage().draw(0.25, 0.25, 1.5);
         randomComplexOomage().draw(0.75, 0.75, 1.5);
         randomComplexOomage().draw(0.25, 0.75, 1.5);
         randomComplexOomage().draw(0.75, 0.25, 1.5);
+
     }
 } 
